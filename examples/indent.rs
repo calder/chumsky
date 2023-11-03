@@ -1,4 +1,6 @@
 use chumsky::prelude::*;
+use chumsky::error::Rich;
+use chumsky::extra::Err;
 
 #[derive(Clone, Debug)]
 enum Stmt {
@@ -6,7 +8,7 @@ enum Stmt {
     Loop(Vec<Stmt>),
 }
 
-fn parser<'a>() -> impl Parser<'a, &'a str, Vec<Stmt>> {
+fn parser<'a>() -> impl Parser<'a, &'a str, Vec<Stmt>, Err::<Rich<'a, char>>> {
     let expr = just("expr"); // TODO
 
     let block = recursive(|block| {
@@ -32,7 +34,7 @@ fn parser<'a>() -> impl Parser<'a, &'a str, Vec<Stmt>> {
 fn main() {
     let stmts = parser().padded().parse(
         r#"
-expr
+exprasdf
 expr
 loop:
     expr
